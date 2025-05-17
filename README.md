@@ -75,63 +75,44 @@ Client-server chat applications are foundational to real-time communication over
 
 ## PROGRAM:
 ```
-Client:
+CLIENT:
 import socket
-
-def client_program():
-    host = socket.gethostname() 
-    port = 5000  
-
-    client_socket = socket.socket()  
-    client_socket.connect((host, port))  
-
-    message = input(" -> ")  
-
-    while message.lower().strip() != 'bye':
-        client_socket.send(message.encode())  
-        data = client_socket.recv(1024).decode()  
-
-        print('Received from server: ' + data)  
-
-        message = input(" -> ")  
-
-    client_socket.close() 
-
-if __name__ == '__main__':
-    client_program()
-
-
-Server:
-import socket
-def server_program():
-    host = socket.gethostname()
-    port = 5000
-
-    server_socket = socket.socket() 
-    server_socket.bind((host, port))  
-
-
-    server_socket.listen(2)
-    conn, address = server_socket.accept()  
-    print("Connection from: " + str(address))
-    while True:
-        
-        data = conn.recv(1024).decode()
-        if not data:
-            break
-        print("from connected user: " + str(data))
-        data = input(' -> ')
-        conn.send(data.encode())  
-
-    conn.close()  
-
-
-if __name__ == '__main__':
-    server_program()
+ from datetime import datetime
+ 
+s=socket.socket()
+ 
+s.bind(('localhost',8000))
+ 
+s.listen(5)
+ c,addr=s.accept()
+ print("Client Address : ",addr)
+ 
+now = datetime.now()
+ 
+c.send(now.strftime("%d/%m/%Y %H:%M:%S").encode())
+ ack=c.recv(1024).decode()
+ 
+if ack:
+    print(ack)
+ 
+c.close()
+```
+```
+SERVER:
+ 
+import socket 
+s=socket.socket() 
+s.connect(('localhost',8000)) 
+print(s.getsockname()) 
+print(s.recv(1024).decode()) 
+s.send("acknowledgement recived from the server".encode())
 ```
 ## OUTPUT:
+Client:
+![image](https://github.com/user-attachments/assets/007cd50e-b0d1-46fc-b188-a86dacd05dd3)
 
-![440079347-622f90f5-f28d-4505-8ef0-b230a5d41555](https://github.com/user-attachments/assets/5fb9f44f-79aa-42c7-9091-59fd74b525e7)
+Server:
+![image](https://github.com/user-attachments/assets/7c19901d-81b5-4f14-8bde-363bf618a1f8)
 
 ## Result:
 
